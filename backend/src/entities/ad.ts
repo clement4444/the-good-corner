@@ -1,8 +1,6 @@
-import {
-    BaseEntity,
-    Column, Entity,
-    PrimaryGeneratedColumn
-} from "typeorm";
+import { BaseEntity, Column, Entity, JoinTable, ManyToMany, ManyToOne, JoinColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Category } from "./category";
+import { Tag } from "./tag";
 
 @Entity()
 export class Ad extends BaseEntity {
@@ -30,6 +28,15 @@ export class Ad extends BaseEntity {
     @Column()
     createdAt: Date;
 
-    @Column()
-    categoryId: number;
+    @ManyToOne(() => Category, category => category.id)
+    @JoinColumn({ name: "category_id" })
+    categories: Category;
+
+    @ManyToMany(() => Tag, tag => tag.id)
+    @JoinTable({
+        name: "ads_tags",
+        joinColumns: [{ name: "ad_id" }],
+        inverseJoinColumns: [{ name: "tag_id" }]
+    })
+    tags: Tag[];
 }

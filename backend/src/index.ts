@@ -1,10 +1,13 @@
 import express from "express";
-import sqlite3 from "sqlite3";
+import dotenv from "dotenv";
 import { dataSource } from "./config/db";
+import { Ad } from "./entities/ad";
+import { Category } from "./entities/category";
+import { Tag } from "./entities/tag";
 
 const app = express();
-const port = 3000;
-const db = new sqlite3.Database("./baseDonner/good_corner.sqlite")
+dotenv.config();
+const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
@@ -12,72 +15,69 @@ app.get("/", (_req, res) => {
   res.send("Hello World!");
 });
 
-app.get("/ads", (_req, res) => {
-  db.all("SELECT * FROM AD", (err, rows) => {
-    if (err) {
-      res.status(500).send("Une erreur est survenue");
-      return;
-    }
-    res.send(rows);
-  })
+//les routes ads----------------------------------------------------
+
+app.get("/ads", async (_req, res) => {
+  try {
+    //récupére tout les articles
+    const ads = await Ad.find({
+      relations: {
+        tags: true,
+        categories: true
+      },
+    });
+
+    //renvoyer les articles
+    res.status(200).send(ads);
+  } catch (error) {
+    res.status(500).send("erreur lors de la récupération des articles");
+  }
 });
 
 app.post("/ads", (req, res) => {
   try {
     // récuprére les données du body
-    const { title, description, owner, price, picture, location } = req.body;
+    const { title, description, owner, price, picture, location, createdAt, category_id } = req.body;
 
-    //prépare la requête
-    const stmt = db.prepare(
-      "INSERT INTO ad (title, description, owner, price, picture, location) VALUES (?, ?, ?, ?, ?, ?)"
-    );
-    stmt.run([
-      title,
-      description,
-      owner,
-      price,
-      picture,
-      location
-    ]);
+    const ad = new Ad();
+    ad.title = title;
+    ad.description = description;
+    ad.owner = owner;
+    ad.price = price;
+    ad.picture = picture;
+    ad.location = location;
+    ad.createdAt = createdAt;
+    ad.categories = category_id;
+    ad.save();
 
     //message reponse
     res.status(201).send("article bien ajouté");
   } catch (error) {
-    //renvoyer un message eurreur
     res.status(500).send("erreur lors de l'ajout de l'article");
   }
 });
 
 app.delete("/ads/:id", (req, res) => {
-  //prépare la requête
-  const stmt = db.prepare("DELETE FROM AD WHERE id = ?;");
-  //execution de la requête
-  stmt.run([req.params.id]);
+  try {
+    const id = req.params.id;
+    //supprimer l'article
+    Ad.delete(id);
 
-  //renvoyer une réponse
-  res.status(200).send("article supprimé");
+    //renvoyer une réponse
+    res.status(200).send("article supprimé");
+  } catch (error) {
+    res.status(500).send("erreur lors de la suppression de l'article");
+  }
 });
 
-app.put("/ads/:id", (req, res) => {
+app.put("/ads/:id", async (req, res) => {
   try {
-    // récuprére les données du body
-    const { title, description, owner, price, picture, location } = req.body;
-    const id = req.params.id;
+    // récuprére les données du body & l'id
+    const body = req.body;
+    const id = Number.parseInt(req.params.id);
 
-    //prépare la requête
-    const stmt = db.prepare(
-      "UPDATE AD SET title = ?, description = ?, owner = ?, price = ?, picture = ?, location = ? WHERE id = ?;"
-    );
-    //execution de la requête
-    stmt.run([
-      title,
-      description,
-      owner,
-      price,
-      picture,
-      location,
-      id
-    ]);
+    //met a jour l'article en fonction des informations du body
+    await Ad.update({ id: id }, body);
 
     //message reponse
     res.status(200).send("article modifié avec succès");
@@ -87,7 +87,83 @@ app.put("/ads/:id", (req, res) => {
   }
 });
 
+//les routes categories----------------------------------------------------
+
+app.get("/categories", async (_req, res) => {
+  try {
+    //récupére tout les categories
+    const categories = await Category.find();
+
+    //renvoyer les categories
+    res.status(200).send(categories);
+  } catch (error) {
+    res.status(500).send("erreur lors de la récupération des categories");
+  }
+});
+
+app.post("/categories", (req, res) => {
+  try {
+    // récuprére les données du body
+    const { nom } = req.body;
+
+    const categorie = new Category();
+    categorie.nom = nom;
+    categorie.save();
+
+    //message reponse
+    res.status(201).send("categorie bien ajouté");
+  } catch (error) {
+    res.status(500).send("erreur lors de l'ajout de la catégorie");
+  }
+});
+
+//les routes tags----------------------------------------------------------
+
+app.get("/tags", async (_req, res) => {
+  try {
+    //récupére tout les tages
+    const tages = await Tag.find();
+
+    //renvoyer les tages
+    res.status(200).send(tages);
+  } catch (error) {
+    res.status(500).send("erreur lors de la récupération des tages");
+  }
+});
+
+app.post("/tags", (req, res) => {
+  try {
+    // récuprére les données du body
+    const { nom } = req.body;
+
+    const tag = new Tag();
+    tag.nom = nom;
+    tag.save();
+
+    //message reponse
+    res.status(201).send("tag bien ajouté");
+  } catch (error) {
+    res.status(500).send("erreur lors de l'ajout de la tag");
+  }
+});
+
+//ecouter de api-----------------------------------------------------------
+
 app.listen(port, async () => {
+  //initialisation de la base de donnée
   await dataSource.initialize();
+
+  //récupére les catégories
+  const category = await Category.find();
+
+  //verifie si il y a au moins une catégorie
+  if (category.length === 0) {
+    //créer une catégorie par défaut
+    const categoryDefaut = new Category();
+    categoryDefaut.nom = "defaut";
+    categoryDefaut.save();
+  }
+  //log de démarrage
   console.info(`Serveur lancer sur le port ${port} ✅`);
+  console.log(`\n\x1b[38;5;81m\x1b]8;;http://localhost:${port}/\x1b\\http://localhost:${port}/\x1b]8;;\x1b\\\x1b[39m`);
 });
