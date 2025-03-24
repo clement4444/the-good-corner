@@ -20,7 +20,7 @@ Content-Type: application/json
 
 ###
 
-PUT http://localhost:3000/ads/5
+PUT http://localhost:3000/ads/1
 Content-Type: application/json
 
 {

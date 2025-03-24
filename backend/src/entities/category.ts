@@ -7,7 +7,7 @@ import {
 import { Ad } from "./ad";
 
 @Entity()
-export class Category extends BaseEntity {
+export className Category extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 

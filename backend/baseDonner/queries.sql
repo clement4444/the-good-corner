@@ -60,7 +60,7 @@ VALUES
     ("Machine à café", "Nespresso Vertuo, avec capsules offertes", "coffee.seller@gmail.com", 120, "2024-03-06", NULL, "Lyon", 7),
     ("VTT tout terrain", "Vélo de montagne avec suspensions", "bike.seller@gmail.com", 400, "2024-03-05", NULL, "Bordeaux", 1),
     ("Clé USB 64Go", "Clé USB Kingston 64Go neuve", "data.seller@gmail.com", 20, "2024-09-02", NULL, "Paris", 5),
-    ("Cahier de notes", "Cahier A4 200 pages, lignage classique", "student.seller@gmail.com", 10, "2024-09-03", NULL, "Lyon", 3),
+    ("Cahier de notes", "Cahier A4 200 pages, lignage classNameique", "student.seller@gmail.com", 10, "2024-09-03", NULL, "Lyon", 3),
     ("Tapis de course", "Tapis pliable, idéal pour la maison", "fitness.seller@gmail.com", 600, "2024-03-01", NULL, "Paris", 6),
     ("Barbecue à gaz", "Barbecue Weber, idéal pour l'été", "bbq.seller@gmail.com", 250, "2024-02-28", "https://example.com/image7.jpg", "Lyon", 8),
     ("Trousse scolaire", "Trousse avec 5 stylos et règle", "school.seller@gmail.com", 8, "2024-09-02", NULL, "Bordeaux", 3);

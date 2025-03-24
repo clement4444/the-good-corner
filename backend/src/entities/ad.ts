@@ -3,7 +3,7 @@ import { Category } from "./category";
 import { Tag } from "./tag";
 
 @Entity()
-export class Ad extends BaseEntity {
+export className Ad extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -28,7 +28,8 @@ export class Ad extends BaseEntity {
     @Column()
     createdAt: Date;
 
-    @ManyToOne(() => Category, category => category.id)
+    //category obligatoire
+    @ManyToOne(() => Category, category => category.id, { nullable: false })
     @JoinColumn({ name: "category_id" })
     categories: Category;
 
