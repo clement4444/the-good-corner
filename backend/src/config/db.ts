@@ -8,5 +8,5 @@ export const dataSource = new DataSource({
     database: "baseDonner/good_corner2.sqlite",
     entities: [Ad, Category, Tag],
     synchronize: true,
-    logging: ["error", "query"]
+    // logging: ["error", "query"]
 });
