@@ -1,16 +1,19 @@
 import './App.css';
-import Header from './components/Header';
+import { Route, Routes } from 'react-router';
 import RecentAds from './components/RecentAds';
+import Layout from './pages/Layout';
+import About from './components/About';
+import AdDetails from './components/AdDetails';
 
 const App = () => {
-
   return (
-    <body>
-      <main className="main-content">
-        <Header />
-        <RecentAds />
-      </main>
-    </body>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<RecentAds />} />
+        <Route path="about" element={<About />} />
+        <Route path="ad/:id" element={<AdDetails />} />
+      </Route>
+    </Routes>
   )
 }
 

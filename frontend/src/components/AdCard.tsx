@@ -1,9 +1,10 @@
+import { Link } from "react-router";
+
 export interface Ad {
   id: number;
-  titre: string;
-  imgUrl: string;
-  prix: number;
-  link: string;
+  title: string;
+  picture: string;
+  price: number;
 }
 
 interface AdCardProps {
@@ -13,13 +14,13 @@ interface AdCardProps {
 const AdCard = ({ ad }: AdCardProps) => {
   return (
     <div className="ad-card-container">
-      <a className="ad-card-link" href={ad.link}>
-        <img className="ad-card-image" src={ad.imgUrl} />
+      <Link className="ad-card-link" to={`/ad/${ad.id}`}>
+        <img className="ad-card-image" src={ad.picture} />
         <div className="ad-card-text">
-          <div className="ad-card-title">{ad.titre}</div>
-          <div className="ad-card-price">{ad.prix} €</div>
+          <div className="ad-card-title">{ad.title}</div>
+          <div className="ad-card-price">{ad.price} €</div>
         </div>
-      </a>
+      </Link>
     </div>
   );
 };

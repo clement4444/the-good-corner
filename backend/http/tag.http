@@ -1,8 +1,8 @@
-GET http://localhost:3000/tags
+GET http://localhost:3310/tags
 
 ###
 
-POST http://localhost:3000/tags
+POST http://localhost:3310/tags
 Content-Type: application/json
 
 {

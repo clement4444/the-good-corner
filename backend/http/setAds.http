@@ -1,0 +1,93 @@
+POST http://localhost:3310/ads
+Content-Type: application/json
+
+{
+    "title": "Table",
+    "description": "Belle table en bois massif, idéale pour une salle à manger conviviale.",
+    "owner": "Jean Dupont",
+    "price": 120,
+    "picture": "/images/table.webp",
+    "location": "Paris, France",
+    "createdAt": "2025-03-25T10:30:00Z",
+    "category_id": 1
+}
+
+###
+
+POST http://localhost:3310/ads
+Content-Type: application/json
+
+{
+    "title": "Dame-jeanne",
+    "description": "Grande dame-jeanne en verre soufflé, parfaite pour la décoration intérieure.",
+    "owner": "Sophie Martin",
+    "price": 75,
+    "picture": "/images/dame-jeanne.webp",
+    "location": "Lyon, France",
+    "createdAt": "2025-03-25T11:00:00Z",
+    "category_id": 1
+}
+
+###
+
+POST http://localhost:3310/ads
+Content-Type: application/json
+
+{
+    "title": "Vide-poche",
+    "description": "Petit vide-poche en céramique, idéal pour ranger clés et petits objets.",
+    "owner": "Alexandre Leclerc",
+    "price": 4,
+    "picture": "/images/vide-poche.webp",
+    "location": "Marseille, France",
+    "createdAt": "2025-03-25T11:15:00Z",
+    "category_id": 1
+}
+
+###
+
+POST http://localhost:3310/ads
+Content-Type: application/json
+
+{
+    "title": "Vaisselier",
+    "description": "Grand vaisselier en chêne avec vitrine, parfait pour exposer votre vaisselle.",
+    "owner": "Claire Moreau",
+    "price": 900,
+    "picture": "/images/vaisselier.webp",
+    "location": "Bordeaux, France",
+    "createdAt": "2025-03-25T12:00:00Z",
+    "category_id": 1
+}
+
+###
+
+POST http://localhost:3310/ads
+Content-Type: application/json
+
+{
+    "title": "Bougie",
+    "description": "Bougie parfumée artisanale, senteur vanille, durée de combustion 40h.",
+    "owner": "Emma Durand",
+    "price": 8,
+    "picture": "/images/bougie.webp",
+    "location": "Toulouse, France",
+    "createdAt": "2025-03-25T12:30:00Z",
+    "category_id": 1
+}
+
+###
+
+POST http://localhost:3310/ads
+Content-Type: application/json
+
+{
+    "title": "Porte-magazine",
+    "description": "Porte-magazine en métal moderne, pratique pour organiser vos magazines et journaux.",
+    "owner": "Lucie Bernard",
+    "price": 45,
+    "picture": "/images/porte-magazine.webp",
+    "location": "Nice, France",
+    "createdAt": "2025-03-25T13:00:00Z",
+    "category_id": 1
+}

@@ -1,8 +1,8 @@
-GET http://localhost:3000/categories
+GET http://localhost:3310/categories
 
 ###
 
-POST http://localhost:3000/categories
+POST http://localhost:3310/categories
 Content-Type: application/json
 
 {
