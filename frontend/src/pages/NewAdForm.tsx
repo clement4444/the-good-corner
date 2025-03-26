@@ -1,25 +1,42 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { useForm, SubmitHandler } from "react-hook-form"
 
 interface category {
   id: number;
   nom: string;
 }
 
-interface AdFormData {
-  titre: string;
+type Inputs = {
+  title: string;
   description: string;
   owner: string;
-  price: number;
   picture: string;
+  price: number;
   location: string;
-  category: string;
+  category_id: number;
 }
 
 const NewAdForm = () => {
   const navigate = useNavigate();
   const [categories, setCategories] = useState<category[]>([]);
+
+  //préparation du formulaire
+  const {
+    register,
+    handleSubmit,
+  } = useForm<Inputs>()
+
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    try {
+      await axios.post(`${import.meta.env.VITE_URL_API}/ads`, data);
+      navigate("/");
+    } catch (error) {
+      alert("Erreur lors de l'envoie de l'annonce");
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -34,25 +51,15 @@ const NewAdForm = () => {
   }, []);
 
   return (
-    <form
-      onSubmit={async (e) => {
-        e.preventDefault();
-        const form = e.target as HTMLFormElement;
-        const formData = new FormData(form);
-        const formJson = Object.fromEntries(formData.entries());
-        try {
-          await axios.post(`${import.meta.env.VITE_URL_API}/ads`, formJson);
-          navigate("/");
-        } catch (error) {
-          alert("Erreur lors de l'envoie de l'annonce");
-          console.error(error);
-        }
-      }}
-    >
+    <form onSubmit={handleSubmit(onSubmit)}>
       {/* titre */}
       <label>
         Titre de l'annonce:
-        <input type="text" className="text-field" name="title" />
+        <input
+          className="text-field"
+          defaultValue="maison"
+          {...register("title", { required: true })}
+        />
       </label>
 
       <br />
@@ -60,7 +67,11 @@ const NewAdForm = () => {
       {/* description */}
       <label>
         description:
-        <input type="text" className="text-field" name="description" />
+        <input
+          className="text-field"
+          defaultValue="maison 200km²"
+          {...register("description", { required: true })}
+        />
       </label>
 
       <br />
@@ -68,7 +79,11 @@ const NewAdForm = () => {
       {/* auteur */}
       <label>
         mail:
-        <input type="email" className="text-field" name="owner" />
+        <input
+          className="text-field"
+          defaultValue="auteur@gmail.com"
+          {...register("owner", { required: true })}
+        />
       </label>
 
       <br />
@@ -76,7 +91,11 @@ const NewAdForm = () => {
       {/* prix */}
       <label>
         prix:
-        <input type="number" className="text-field" name="price" />
+        <input
+          className="text-field"
+          defaultValue="2"
+          {...register("price", { required: true })}
+        />
       </label>
 
       <br />
@@ -84,7 +103,11 @@ const NewAdForm = () => {
       {/* image */}
       <label>
         image:
-        <input type="text" className="text-field" name="picture" />
+        <input
+          className="text-field"
+          defaultValue="https://th.bing.com/th/id/R.712ff44360b0eec68b6766f8fc43caa0?rik=duVyXCtTsD%2b2mg&pid=ImgRaw&r=0"
+          {...register("picture", { required: true })}
+        />
       </label>
 
       <br />
@@ -92,14 +115,21 @@ const NewAdForm = () => {
       {/* localisation */}
       <label>
         localisation:
-        <input type="text" className="text-field" name="location" />
+        <input
+          className="text-field"
+          defaultValue="grenland"
+          {...register("location", { required: true })}
+        />
       </label>
 
       <br />
 
       <label>
         Choisissez une catégorie:
-        <select name="category_id" className="text-field">
+        <select
+          className="text-field"
+          {...register("category_id", { required: true })}
+        >
           {categories.map((ca) => (
             <option key={ca.id} value={ca.id}>
               {ca.nom}
