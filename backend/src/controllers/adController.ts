@@ -18,6 +18,27 @@ const getAll: RequestHandler = async (_req, res, next) => {
     }
 };
 
+const getByCategorie: RequestHandler = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        //récupére tout les articles
+        const ads = await Ad.find({
+            relations: {
+                tags: true,
+                categories: true
+            },
+            where: {
+                categories: { id: Number(id) }
+            }
+        });
+
+        //renvoyer les articles
+        res.status(200).send(ads);
+    } catch (error) {
+        next(error);
+    }
+};
+
 const create: RequestHandler = async (req, res, next) => {
     try {
         // récuprére les données du body
@@ -73,4 +94,4 @@ const remove: RequestHandler = async (req, res, next) => {
     }
 };
 
-export default { getAll, create, update, remove };
+export default { getAll, getByCategorie, create, update, remove };

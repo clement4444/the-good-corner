@@ -1,6 +1,23 @@
 import { Link } from "react-router";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import type { Categories } from "@/types/categorie";
 
 const Header = () => {
+  const [categories, setCategories] = useState<Categories[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_URL_API}/categories`);
+        setCategories(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
   return (
     <header className="header">
       <div className="main-menu">
@@ -40,7 +57,7 @@ const Header = () => {
         </a>
       </div>
       <nav className="categories-navigation">
-        <a href="" className="category-navigation-link">Ameublement</a> •
+        {/* <a href="" className="category-navigation-link">Ameublement</a> •
         <a href="" className="category-navigation-link">Électroménager</a> •
         <a href="" className="category-navigation-link">Photographie</a> •
         <a href="" className="category-navigation-link">Informatique</a> •
@@ -52,7 +69,16 @@ const Header = () => {
         <a href="" className="category-navigation-link">Bébé</a> •
         <a href="" className="category-navigation-link">Outillage</a> •
         <a href="" className="category-navigation-link">Services </a> •
-        <a href="" className="category-navigation-link">Vacances</a>
+        <a href="" className="category-navigation-link">Vacances</a> */}
+        {categories.length > 0 ?
+          categories.map((categorie, index) => (
+            <div key={categorie.id}>
+              <a href="" className="category-navigation-link">{categorie.nom}</a>
+              {index < categories.length - 1 && " • "}
+            </div>
+          ))
+          : <p>Chargement...</p>
+        }
       </nav>
     </header>
   );

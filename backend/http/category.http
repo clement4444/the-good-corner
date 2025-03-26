@@ -6,5 +6,5 @@ POST http://localhost:3310/categories
 Content-Type: application/json
 
 {
-    "nom": "maison"
+    "nom": "Outillage"
 }

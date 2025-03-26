@@ -1,12 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { useForm, SubmitHandler } from "react-hook-form"
-
-interface category {
-  id: number;
-  nom: string;
-}
+import { useForm, SubmitHandler } from "react-hook-form";
+import type { Categories } from "@/types/categorie";
+import { toast } from "react-toastify";
 
 type Inputs = {
   title: string;
@@ -20,7 +17,7 @@ type Inputs = {
 
 const NewAdForm = () => {
   const navigate = useNavigate();
-  const [categories, setCategories] = useState<category[]>([]);
+  const [categories, setCategories] = useState<Categories[]>([]);
 
   //préparation du formulaire
   const {
@@ -31,7 +28,7 @@ const NewAdForm = () => {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
       await axios.post(`${import.meta.env.VITE_URL_API}/ads`, data);
-      navigate("/");
+      // navigate("/");
     } catch (error) {
       alert("Erreur lors de l'envoie de l'annonce");
       console.error(error);
@@ -51,94 +48,116 @@ const NewAdForm = () => {
   }, []);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      {/* titre */}
-      <label>
-        Titre de l'annonce:
-        <input
-          className="text-field"
-          defaultValue="maison"
-          {...register("title", { required: true })}
-        />
-      </label>
+    <>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {/* titre */}
+        <label>
+          Titre de l'annonce:
+          <input
+            className="text-field"
+            defaultValue="maison"
+            {...register("title", { required: true })}
+          />
+        </label>
 
-      <br />
+        <br />
 
-      {/* description */}
-      <label>
-        description:
-        <input
-          className="text-field"
-          defaultValue="maison 200km²"
-          {...register("description", { required: true })}
-        />
-      </label>
+        {/* description */}
+        <label>
+          description:
+          <input
+            className="text-field"
+            defaultValue="maison 200km²"
+            {...register("description", { required: true })}
+          />
+        </label>
 
-      <br />
+        <br />
 
-      {/* auteur */}
-      <label>
-        mail:
-        <input
-          className="text-field"
-          defaultValue="auteur@gmail.com"
-          {...register("owner", { required: true })}
-        />
-      </label>
+        {/* auteur */}
+        <label>
+          mail:
+          <input
+            className="text-field"
+            defaultValue="auteur@gmail.com"
+            {...register("owner", { required: true })}
+          />
+        </label>
 
-      <br />
+        <br />
 
-      {/* prix */}
-      <label>
-        prix:
-        <input
-          className="text-field"
-          defaultValue="2"
-          {...register("price", { required: true })}
-        />
-      </label>
+        {/* prix */}
+        <label>
+          prix:
+          <input
+            className="text-field"
+            defaultValue="2"
+            {...register("price", { required: true })}
+          />
+        </label>
 
-      <br />
+        <br />
 
-      {/* image */}
-      <label>
-        image:
-        <input
-          className="text-field"
-          defaultValue="https://th.bing.com/th/id/R.712ff44360b0eec68b6766f8fc43caa0?rik=duVyXCtTsD%2b2mg&pid=ImgRaw&r=0"
-          {...register("picture", { required: true })}
-        />
-      </label>
+        {/* image */}
+        <label>
+          image:
+          <input
+            className="text-field"
+            defaultValue="https://th.bing.com/th/id/R.712ff44360b0eec68b6766f8fc43caa0?rik=duVyXCtTsD%2b2mg&pid=ImgRaw&r=0"
+            {...register("picture", { required: true })}
+          />
+        </label>
 
-      <br />
+        <br />
 
-      {/* localisation */}
-      <label>
-        localisation:
-        <input
-          className="text-field"
-          defaultValue="grenland"
-          {...register("location", { required: true })}
-        />
-      </label>
+        {/* localisation */}
+        <label>
+          localisation:
+          <input
+            className="text-field"
+            defaultValue="grenland"
+            {...register("location", { required: true })}
+          />
+        </label>
 
-      <br />
+        <br />
 
-      <label>
-        Choisissez une catégorie:
-        <select
-          className="text-field"
-          {...register("category_id", { required: true })}
-        >
-          {categories.map((ca) => (
-            <option key={ca.id} value={ca.id}>
-              {ca.nom}
-            </option>
-          ))}
-        </select>
-      </label>
-      <button className="button">Envoyer</button>
-    </form>
+        {categories.length > 0 &&
+          <label>
+            Choisissez une catégorie:
+            <select
+              className="text-field"
+              defaultValue={categories[0].id}
+              {...register("category_id", { required: true })}
+            >
+              {categories.map((ca) => (
+                <option key={ca.id} value={ca.id}>
+                  {ca.nom}
+                </option>
+              ))}
+            </select>
+          </label>
+        }
+        <button className="button">Envoyer</button>
+      </form>
+      <button
+        className="button"
+        onClick={() => {
+          toast.success("🦄 Wow so easy!");
+          // toast('🦄 Wow so easy!', {
+          //   position: "top-right",
+          //   autoClose: 5000,
+          //   hideProgressBar: false,
+          //   closeOnClick: false,
+          //   pauseOnHover: true,
+          //   draggable: true,
+          //   progress: undefined,
+          //   theme: "light"
+          // });
+        }}
+      >
+        notification</button>
+    </>
   );
 };
 

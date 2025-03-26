@@ -24,7 +24,7 @@ const RecentAds = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setTotal(prevTotal => prevTotal + 1);
-    }, 100000);
+    }, 100);
 
     return () => clearInterval(interval);
   }, []);
