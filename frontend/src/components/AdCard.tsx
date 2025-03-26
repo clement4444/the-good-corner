@@ -1,11 +1,5 @@
 import { Link } from "react-router";
-
-export interface Ad {
-  id: number;
-  title: string;
-  picture: string;
-  price: number;
-}
+import type { Ad } from "@type/adType";
 
 interface AdCardProps {
   ad: Ad;

@@ -1,4 +1,4 @@
-import type { Ad } from "./AdCard";
+import type { Ad } from "@type/adType";
 import AdCard from "./AdCard";
 import axios from "axios";
 import { useState, useEffect } from "react";
@@ -38,6 +38,24 @@ const RecentAds = () => {
     }
   }
 
+  const dupliquerArticle = async (ad: Ad) => {
+    const data = {
+      title: ad.title,
+      description: ad.description,
+      owner: ad.owner,
+      price: ad.price,
+      picture: ad.picture,
+      location: ad.location,
+      category_id: ad.categories.id,
+    }
+    try {
+      await axios.post(`${import.meta.env.VITE_URL_API}/ads`, data);
+      fetchData();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <>
       <h2>Annonces récentes</h2>
@@ -59,6 +77,12 @@ const RecentAds = () => {
               onClick={() => delArticle(ad.id)}
             >
               Supprimer
+            </button>
+            <button
+              className="button"
+              onClick={() => dupliquerArticle(ad)}
+            >
+              Duplique
             </button>
           </div>
         ))}
