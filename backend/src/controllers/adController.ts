@@ -21,7 +21,7 @@ const getAll: RequestHandler = async (_req, res, next) => {
 const create: RequestHandler = async (req, res, next) => {
     try {
         // récuprére les données du body
-        const { title, description, owner, price, picture, location, createdAt, category_id } = req.body;
+        const { title, description, owner, price, picture, location, category_id, tags } = req.body;
 
         const ad = new Ad();
         ad.title = title;
@@ -30,8 +30,10 @@ const create: RequestHandler = async (req, res, next) => {
         ad.price = price;
         ad.picture = picture;
         ad.location = location;
-        ad.createdAt = createdAt;
         ad.categories = category_id;
+        if (tags) {
+            ad.tags = tags;
+        }
         await ad.save();
 
         //message reponse

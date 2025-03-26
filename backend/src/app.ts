@@ -7,7 +7,7 @@ const app = express();
 
 app.use(express.json());
 
-app.use(cors({ origin: "http://localhost:3000" }));
+app.use(cors({ origin: ["http://localhost:3000", "http://192.168.1.184:3000"] }));
 
 app.use("/", router);
 

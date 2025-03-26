@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, JoinTable, ManyToMany, ManyToOne, JoinColumn, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinTable, ManyToMany, ManyToOne, JoinColumn, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
 import { Category } from "./category";
 import { Tag } from "./tag";
 
@@ -25,7 +25,7 @@ export class Ad extends BaseEntity {
     @Column()
     location: string;
 
-    @Column()
+    @CreateDateColumn()
     createdAt: Date;
 
     //category obligatoire

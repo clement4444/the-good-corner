@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 
 const Header = () => {
   return (
@@ -29,7 +30,7 @@ const Header = () => {
             </svg>
           </button>
         </form>
-        <a href="/post-ad" className="button link-button">
+        <a href="/ad/new" className="button link-button">
           <span className="mobile-short-label">
             Publier
           </span>

@@ -2,8 +2,9 @@ import './App.css';
 import { Route, Routes } from 'react-router';
 import RecentAds from './components/RecentAds';
 import Layout from './pages/Layout';
-import About from './components/About';
-import AdDetails from './components/AdDetails';
+import About from './pages/About';
+import AdDetails from './pages/AdDetails';
+import NewAdForm from './pages/NewAdForm';
 
 const App = () => {
   return (
@@ -11,6 +12,7 @@ const App = () => {
       <Route path="/" element={<Layout />}>
         <Route index element={<RecentAds />} />
         <Route path="about" element={<About />} />
+        <Route path="ad/new" element={<NewAdForm />} />
         <Route path="ad/:id" element={<AdDetails />} />
       </Route>
     </Routes>

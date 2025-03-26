@@ -7,15 +7,16 @@ const RecentAds = () => {
   const [total, setTotal] = useState(0);
   const [ads, setAds] = useState<Ad[]>([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await axios.get(`${import.meta.env.VITE_URL_API}/ads`);
-        setAds(result.data);
-      } catch (error) {
-        console.error(error);
-      }
+  const fetchData = async () => {
+    try {
+      const result = await axios.get(`${import.meta.env.VITE_URL_API}/ads`);
+      setAds(result.data);
+    } catch (error) {
+      console.error(error);
     }
+  }
+
+  useEffect(() => {
     fetchData()
   }, []);
 
@@ -27,6 +28,15 @@ const RecentAds = () => {
 
     return () => clearInterval(interval);
   }, []);
+
+  const delArticle = async (id: number) => {
+    try {
+      await axios.delete(`${import.meta.env.VITE_URL_API}/ads/${id}`);
+      fetchData();
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <>
@@ -43,6 +53,12 @@ const RecentAds = () => {
               onClick={() => setTotal(total + ad.price)}
             >
               Ajouter au panier {ad.price} €
+            </button>
+            <button
+              className="button"
+              onClick={() => delArticle(ad.id)}
+            >
+              Supprimer
             </button>
           </div>
         ))}
