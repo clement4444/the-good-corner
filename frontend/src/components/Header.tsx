@@ -22,10 +22,10 @@ const Header = () => {
     <header className="header">
       <div className="main-menu">
         <h1>
-          <a href="/" className="button logo link-button">
+          <Link to="/" className="button logo link-button">
             <span className="mobile-short-label">TGC</span>
             <span className="desktop-long-label">THE GOOD CORNER</span>
-          </a>
+          </Link>
         </h1>
         <form className="text-field-with-button">
           <input className="text-field main-search-field" type="search" />
@@ -73,7 +73,7 @@ const Header = () => {
         {categories.length > 0 ?
           categories.map((categorie, index) => (
             <div key={categorie.id}>
-              <a href="" className="category-navigation-link">{categorie.nom}</a>
+              <Link to={`?categorie=${categorie.id}`} className="category-navigation-link">{categorie.nom}</Link>
               {index < categories.length - 1 && " • "}
             </div>
           ))

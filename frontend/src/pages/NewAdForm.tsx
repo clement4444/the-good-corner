@@ -28,7 +28,8 @@ const NewAdForm = () => {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
       await axios.post(`${import.meta.env.VITE_URL_API}/ads`, data);
-      // navigate("/");
+      toast.success("Annonce crée avec succès");
+      navigate("/");
     } catch (error) {
       alert("Erreur lors de l'envoie de l'annonce");
       console.error(error);
@@ -140,23 +141,6 @@ const NewAdForm = () => {
         }
         <button className="button">Envoyer</button>
       </form>
-      <button
-        className="button"
-        onClick={() => {
-          toast.success("🦄 Wow so easy!");
-          // toast('🦄 Wow so easy!', {
-          //   position: "top-right",
-          //   autoClose: 5000,
-          //   hideProgressBar: false,
-          //   closeOnClick: false,
-          //   pauseOnHover: true,
-          //   draggable: true,
-          //   progress: undefined,
-          //   theme: "light"
-          // });
-        }}
-      >
-        notification</button>
     </>
   );
 };

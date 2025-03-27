@@ -2,14 +2,27 @@ import type { Ad } from "@type/adType";
 import AdCard from "./AdCard";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router";
+import { toast } from "react-toastify";
 
 const RecentAds = () => {
   const [total, setTotal] = useState(0);
   const [ads, setAds] = useState<Ad[]>([]);
+  const [searchParams] = useSearchParams();
+  const categoriesParam = searchParams.get("categorie");
 
   const fetchData = async () => {
     try {
-      const result = await axios.get(`${import.meta.env.VITE_URL_API}/ads`);
+      //prépare l'url de la request
+      let url_request = `${import.meta.env.VITE_URL_API}/ads`;
+
+      //verifie si il y a un parametre categorie
+      if (categoriesParam) {
+        url_request += `?categorie=${categoriesParam}`;
+      }
+
+      //fait la request au serveur
+      const result = await axios.get(url_request);
       setAds(result.data);
     } catch (error) {
       console.error(error);
@@ -18,13 +31,13 @@ const RecentAds = () => {
 
   useEffect(() => {
     fetchData()
-  }, []);
+  }, [categoriesParam]);
 
   // rajout 1 par seconde
   useEffect(() => {
     const interval = setInterval(() => {
       setTotal(prevTotal => prevTotal + 1);
-    }, 100);
+    }, 100000);
 
     return () => clearInterval(interval);
   }, []);
@@ -32,8 +45,10 @@ const RecentAds = () => {
   const delArticle = async (id: number) => {
     try {
       await axios.delete(`${import.meta.env.VITE_URL_API}/ads/${id}`);
+      toast.success("Annonce supprimée");
       fetchData();
     } catch (error) {
+      toast.error("Erreur lors de la suppression de l'annonce");
       console.error(error);
     }
   }
@@ -50,8 +65,10 @@ const RecentAds = () => {
     }
     try {
       await axios.post(`${import.meta.env.VITE_URL_API}/ads`, data);
+      toast.success("Annonce dupliquée");
       fetchData();
     } catch (error) {
+      toast.error("Erreur lors de la duplication de l'annonce");
       console.error(error);
     }
   }
@@ -61,31 +78,34 @@ const RecentAds = () => {
       <h2>Annonces récentes</h2>
       <h3>Total : {total} €</h3>
       <section className="recent-ads">
-        {ads.map((ad) => (
-          <div key={ad.id}>
-            <AdCard
-              ad={ad}
-            />
-            <button
-              className="button"
-              onClick={() => setTotal(total + ad.price)}
-            >
-              Ajouter au panier {ad.price} €
-            </button>
-            <button
-              className="button"
-              onClick={() => delArticle(ad.id)}
-            >
-              Supprimer
-            </button>
-            <button
-              className="button"
-              onClick={() => dupliquerArticle(ad)}
-            >
-              Duplique
-            </button>
-          </div>
-        ))}
+        {ads.length > 0 ?
+          ads.map((ad) => (
+            <div key={ad.id}>
+              <AdCard
+                ad={ad}
+              />
+              <button
+                className="button"
+                onClick={() => setTotal(total + ad.price)}
+              >
+                Ajouter au panier {ad.price} €
+              </button>
+              <button
+                className="button"
+                onClick={() => delArticle(ad.id)}
+              >
+                Supprimer
+              </button>
+              <button
+                className="button"
+                onClick={() => dupliquerArticle(ad)}
+              >
+                Duplique
+              </button>
+            </div>
+          ))
+          :
+          <p>Aucune annonce trouvée</p>}
       </section>
     </>
   );
