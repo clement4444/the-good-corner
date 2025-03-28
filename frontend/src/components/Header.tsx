@@ -2,9 +2,37 @@ import { Link } from "react-router";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import type { Categories } from "@/types/categorie";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { useSearchParams } from "react-router";
+
+interface SearchInput {
+  recherche: string;
+}
 
 const Header = () => {
   const [categories, setCategories] = useState<Categories[]>([]);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  //préparation du formulaire
+  const {
+    register,
+    handleSubmit,
+  } = useForm<SearchInput>()
+
+  const onSubmit: SubmitHandler<SearchInput> = async (data) => {
+    if (data.recherche === "") {
+      searchParams.delete("search");
+    }
+    else {
+      searchParams.set("search", data.recherche);
+    }
+    setSearchParams(searchParams);
+  };
+
+  const onClickCategorie = async (id: number) => {
+    searchParams.set("categorie", String(id));
+    setSearchParams(searchParams);
+  };
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -28,8 +56,12 @@ const Header = () => {
           </Link>
         </h1>
         <form className="text-field-with-button">
-          <input className="text-field main-search-field" type="search" />
-          <button className="button button-primary">
+          <input
+            className="text-field main-search-field"
+            type="search"
+            {...register("recherche", { required: false })}
+          />
+          <button className="button button-primary" onClick={handleSubmit(onSubmit)} type="submit">
             <svg
               aria-hidden="true"
               width="16"
@@ -47,40 +79,32 @@ const Header = () => {
             </svg>
           </button>
         </form>
-        <a href="/ad/new" className="button link-button">
+        <Link to="admin" className="button link-button">
+          <span className="desktop-long-label">
+            Admin
+          </span>
+        </Link>
+        <Link to="/ad/new" className="button link-button">
           <span className="mobile-short-label">
             Publier
           </span>
           <span className="desktop-long-label">
             Publier une annonce
           </span>
-        </a>
+        </Link>
       </div>
       <nav className="categories-navigation">
-        {/* <a href="" className="category-navigation-link">Ameublement</a> •
-        <a href="" className="category-navigation-link">Électroménager</a> •
-        <a href="" className="category-navigation-link">Photographie</a> •
-        <a href="" className="category-navigation-link">Informatique</a> •
-        <a href="" className="category-navigation-link">Téléphonie </a> •
-        <a href="" className="category-navigation-link">Vélos</a> •
-        <a href="" className="category-navigation-link">Véhicules</a> •
-        <a href="" className="category-navigation-link">Sport</a> •
-        <a href="" className="category-navigation-link">Habillement</a> •
-        <a href="" className="category-navigation-link">Bébé</a> •
-        <a href="" className="category-navigation-link">Outillage</a> •
-        <a href="" className="category-navigation-link">Services </a> •
-        <a href="" className="category-navigation-link">Vacances</a> */}
         {categories.length > 0 ?
           categories.map((categorie, index) => (
             <div key={categorie.id}>
-              <Link to={`?categorie=${categorie.id}`} className="category-navigation-link">{categorie.nom}</Link>
+              <button onClick={() => onClickCategorie(categorie.id)} className="category-navigation-link">{categorie.nom}</button>
               {index < categories.length - 1 && " • "}
             </div>
           ))
           : <p>Chargement...</p>
         }
       </nav>
-    </header>
+    </header >
   );
 };
 

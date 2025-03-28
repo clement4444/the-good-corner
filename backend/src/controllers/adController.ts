@@ -1,13 +1,30 @@
 import { Ad } from "../entities/ad";
 import { RequestHandler } from "express";
+import { ILike, FindOperator } from "typeorm";
+
+interface WhereConditionType {
+  categories?: { id: number };
+  title?: FindOperator<string>;
+}
 
 const getAll: RequestHandler = async (req, res, next) => {
   try {
     //récupére le parametre categorie
     const categorieParams = req.query.categorie;
+    const searchParams = req.query.search;
 
-    //prépare la condition where
-    const whereCondition = categorieParams ? { categories: { id: Number(categorieParams) } } : {};
+    // Prépare les conditions
+    const whereCondition = {} as WhereConditionType;
+
+    //si il a une categorie ajouter a la condition
+    if (categorieParams) {
+      whereCondition.categories = { id: Number(categorieParams) };
+    }
+
+    //si il a une recherche ajouter a la condition
+    if (searchParams && searchParams !== "") {
+      whereCondition.title = ILike(`%${searchParams}%`);
+    }
 
     //récupére les articles en utilisant la condition préparé
     const ads = await Ad.find({
@@ -53,7 +70,8 @@ const create: RequestHandler = async (req, res, next) => {
     ad.location = location;
     ad.categories = category_id;
     if (tags) {
-      ad.tags = tags;
+      // adapte les tage de [1, 2] a [ { id: 1 }, { id: 2 } ]
+      ad.tags = tags.map((el: string) => ({ id: Number.parseInt(el) }));
     }
     await ad.save();
 

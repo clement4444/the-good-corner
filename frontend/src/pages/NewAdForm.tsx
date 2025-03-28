@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useForm, SubmitHandler } from "react-hook-form";
 import type { Categories } from "@/types/categorie";
+import type { Tags } from "@/types/tags";
 import { toast } from "react-toastify";
 
 type Inputs = {
@@ -13,11 +14,13 @@ type Inputs = {
   price: number;
   location: string;
   category_id: number;
+  tags: String[] | boolean;
 }
 
 const NewAdForm = () => {
   const navigate = useNavigate();
   const [categories, setCategories] = useState<Categories[]>([]);
+  const [tags, setTags] = useState<Tags[]>([]);
 
   //préparation du formulaire
   const {
@@ -31,11 +34,12 @@ const NewAdForm = () => {
       toast.success("Annonce crée avec succès");
       navigate("/");
     } catch (error) {
-      alert("Erreur lors de l'envoie de l'annonce");
+      toast.error("Erreur lors de l'envoie de l'annonce");
       console.error(error);
     }
   };
 
+  //charger les catégories
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -46,6 +50,19 @@ const NewAdForm = () => {
       }
     };
     fetchCategories();
+  }, []);
+
+  //charger les tags
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_URL_API}/tags`);
+        setTags(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchTags();
   }, []);
 
   return (
@@ -139,6 +156,18 @@ const NewAdForm = () => {
             </select>
           </label>
         }
+
+        {tags.length > 0 &&
+          tags.map((tag) => (
+            <label key={tag.id}>
+              <input
+                type="checkbox"
+                value={tag.id}
+                {...register("tags")}
+              />
+              {tag.nom}
+            </label>
+          ))}
         <button className="button">Envoyer</button>
       </form>
     </>

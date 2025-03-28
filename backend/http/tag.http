@@ -6,5 +6,18 @@ POST http://localhost:3310/tags
 Content-Type: application/json
 
 {
-    "nom": "je suis un tag"
+    "nom": "moi"
 }
+
+###
+
+PUT http://localhost:3310/tags/1
+Content-Type: application/json
+
+{
+    "nom": "hello"
+}
+
+###
+
+DELETE http://localhost:3310/tags/1

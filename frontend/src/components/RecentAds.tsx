@@ -9,16 +9,36 @@ const RecentAds = () => {
   const [total, setTotal] = useState(0);
   const [ads, setAds] = useState<Ad[]>([]);
   const [searchParams] = useSearchParams();
-  const categoriesParam = searchParams.get("categorie");
 
   const fetchData = async () => {
     try {
       //prépare l'url de la request
       let url_request = `${import.meta.env.VITE_URL_API}/ads`;
 
-      //verifie si il y a un parametre categorie
-      if (categoriesParam) {
-        url_request += `?categorie=${categoriesParam}`;
+      //réuni toute les requetes dans un tableau
+      const param = [
+        {
+          nom: "categorie",
+          valeur: searchParams.get("categorie")
+        },
+        {
+          nom: "search",
+          valeur: searchParams.get("search")
+        }
+      ]
+
+      //si il a au moins une requete non null
+      if (param.some((p) => p !== null)) {
+        //rajoute le ? dans url
+        url_request += "?";
+        for (let i = 0; i < param.length; i++) {
+          //rajoute les parametres dans l'url
+          if (param[i].valeur !== null) {
+            url_request += `${param[i].nom}=${param[i].valeur}&`;
+          }
+        }
+        //retire le dernier &
+        url_request = url_request.slice(0, -1);
       }
 
       //fait la request au serveur
@@ -31,7 +51,7 @@ const RecentAds = () => {
 
   useEffect(() => {
     fetchData()
-  }, [categoriesParam]);
+  }, [searchParams]);
 
   // rajout 1 par seconde
   useEffect(() => {
