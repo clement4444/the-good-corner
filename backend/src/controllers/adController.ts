@@ -88,8 +88,27 @@ const update: RequestHandler = async (req, res, next) => {
     const body = req.body;
     const id = Number.parseInt(req.params.id);
 
+    //garde en mémoir les tage
+    let tags;
+    //verifie que c'est un tableau ou une chaine de caractere
+    if (Array.isArray(body.tags)) {
+      tags = body.tags ? body.tags.map((el: string) => ({ id: Number.parseInt(el) })) : undefined
+
+      //si c'est pas un tableux on verifie si il est pas vide
+    } else if (body.tags) {
+      tags = [body.tags];
+    }
+
+    //suprime les tag du body
+    delete body.tags;
+
     //met a jour l'article en fonction des informations du body
     await Ad.update({ id: id }, body);
+
+    //mettre a jour les tag
+    const adtags = await Ad.findOneByOrFail({ id: id });
+    adtags.tags = tags;
+    await adtags.save();
 
     //message reponse
     res.status(200).send("article modifié avec succès");

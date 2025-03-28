@@ -1,4 +1,5 @@
 import type { Categories } from "./categorie";
+import type { Tags } from "./tags";
 
 export interface Ad {
     id: number;
@@ -10,5 +11,5 @@ export interface Ad {
     location: string;
     createdAt: Date;
     categories: Categories;
-    tags?: string[];
+    tags: Tags[];
 }

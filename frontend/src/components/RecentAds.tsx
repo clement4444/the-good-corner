@@ -2,7 +2,7 @@ import type { Ad } from "@type/adType";
 import AdCard from "./AdCard";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { toast } from "react-toastify";
 
 const RecentAds = () => {
@@ -122,6 +122,11 @@ const RecentAds = () => {
               >
                 Duplique
               </button>
+              <Link to={`/ad/${ad.id}/modification`}>
+                <button className="button">
+                  Modifier
+                </button>
+              </Link>
             </div>
           ))
           :

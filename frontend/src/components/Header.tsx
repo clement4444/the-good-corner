@@ -30,6 +30,7 @@ const Header = () => {
   };
 
   const onClickCategorie = async (id: number) => {
+    //voir sur quelle page on est
     searchParams.set("categorie", String(id));
     setSearchParams(searchParams);
   };
@@ -61,7 +62,11 @@ const Header = () => {
             type="search"
             {...register("recherche", { required: false })}
           />
-          <button className="button button-primary" onClick={handleSubmit(onSubmit)} type="submit">
+          <button
+            className="button button-primary"
+            onClick={handleSubmit(onSubmit)}
+            type="submit"
+          >
             <svg
               aria-hidden="true"
               width="16"
@@ -97,7 +102,13 @@ const Header = () => {
         {categories.length > 0 ?
           categories.map((categorie, index) => (
             <div key={categorie.id}>
-              <button onClick={() => onClickCategorie(categorie.id)} className="category-navigation-link">{categorie.nom}</button>
+              <button
+                onClick={() => onClickCategorie(categorie.id)}
+                className="category-navigation-link"
+                style={{ backgroundColor: "transparent", border: "none" }}
+              >
+                {categorie.nom}
+              </button>
               {index < categories.length - 1 && " • "}
             </div>
           ))

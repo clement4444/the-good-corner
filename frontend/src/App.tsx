@@ -5,6 +5,7 @@ import Layout from './pages/Layout';
 import About from './pages/About';
 import AdDetails from './pages/AdDetails';
 import NewAdForm from './pages/NewAdForm';
+import ModificationAd from './pages/ModificationAd';
 import Admin from './pages/Admin';
 
 const App = () => {
@@ -16,6 +17,7 @@ const App = () => {
         <Route path="ad/new" element={<NewAdForm />} />
         <Route path="ad/:id" element={<AdDetails />} />
         <Route path="admin" element={<Admin />} />
+        <Route path="ad/:id/modification" element={<ModificationAd />} />
       </Route>
     </Routes>
   )
