@@ -5,13 +5,17 @@ import {
     PrimaryGeneratedColumn
 } from "typeorm";
 import { Ad } from "./ad";
+import { Field, ObjectType } from "type-graphql";
 
 @Entity()
+@ObjectType()
 export class Category extends BaseEntity {
     @PrimaryGeneratedColumn()
+    @Field()
     id: number;
 
     @Column()
+    @Field()
     nom: string;
 
     @OneToMany(() => Ad, ad => ad.id)
