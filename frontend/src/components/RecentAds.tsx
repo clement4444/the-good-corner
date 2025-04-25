@@ -4,11 +4,14 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router";
 import { toast } from "react-toastify";
+import { useGetAllAdsQuery } from "../generated/graphql-types";
 
 const RecentAds = () => {
   const [total, setTotal] = useState(0);
   const [ads, setAds] = useState<Ad[]>([]);
   const [searchParams] = useSearchParams();
+
+  const { data, loading, error } = useGetAllAdsQuery();
 
   const fetchData = async () => {
     try {
@@ -92,6 +95,12 @@ const RecentAds = () => {
       console.error(error);
     }
   }
+
+  //returne
+
+  if (loading) return <p>Chargement...</p>;
+
+  if (error) return <p>Erreur lors de la récupération des annonces, esseyer plus tard...</p>;
 
   return (
     <>

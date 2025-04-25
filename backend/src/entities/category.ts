@@ -18,6 +18,7 @@ export class Category extends BaseEntity {
     @Field()
     nom: string;
 
-    @OneToMany(() => Ad, ad => ad.id)
+    @OneToMany(() => Ad, ad => ad.categories)
+    @Field(() => [Ad])
     ad: Ad[];
 }

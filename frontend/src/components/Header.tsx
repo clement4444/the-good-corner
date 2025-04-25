@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { Categories } from "@/types/categorie";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useSearchParams } from "react-router";
+import { useGetAllCategoriesQuery } from "../generated/graphql-types";
 
 interface SearchInput {
   recherche: string;
@@ -12,6 +13,9 @@ interface SearchInput {
 const Header = () => {
   const [categories, setCategories] = useState<Categories[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const { data, loading, error } = useGetAllCategoriesQuery();
+  console.log("eurreur", error);
 
   //préparation du formulaire
   const {
@@ -99,20 +103,22 @@ const Header = () => {
         </Link>
       </div>
       <nav className="categories-navigation">
-        {categories.length > 0 ?
-          categories.map((categorie, index) => (
-            <div key={categorie.id}>
-              <button
-                onClick={() => onClickCategorie(categorie.id)}
-                className="category-navigation-link"
-                style={{ backgroundColor: "transparent", border: "none" }}
-              >
-                {categorie.nom}
-              </button>
-              {index < categories.length - 1 && " • "}
-            </div>
-          ))
-          : <p>Chargement...</p>
+        {loading ? <p>Chargement...</p>
+          : error ? <p>Erreur de chargement</p>
+            : data && data.getAllCategories.length > 0 ?
+              data.getAllCategories.map((categorie, index) => (
+                <div key={categorie.id}>
+                  <button
+                    onClick={() => onClickCategorie(categorie.id)}
+                    className="category-navigation-link"
+                    style={{ backgroundColor: "transparent", border: "none" }}
+                  >
+                    {categorie.nom}
+                  </button>
+                  {index < categories.length - 1 && " • "}
+                </div>
+              ))
+              : <p>Aucun catégorie trouvée</p>
         }
       </nav>
     </header >

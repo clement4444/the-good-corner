@@ -1,34 +1,40 @@
+console.time("serveur démarrer");
 import "reflect-metadata";
-import app from "./app";
 import dotenv from "dotenv";
 import { dataSource } from "./config/db";
 import { ApolloServer } from "@apollo/server";
 import { buildSchema } from "type-graphql";
 import { AdResolver } from "./resolvers/AdResolver";
+import CategoryResolver from "./resolvers/categoryResolver";
+import TagResolver from "./resolvers/tagResolver";
+import { startStandaloneServer } from "@apollo/server/standalone";
 
 dotenv.config();
-const port = process.env.SERVEUR_PORT || 3000;
 
-const startServer2 = async () => {
-  const shema = await buildSchema({ resolvers: [AdResolver] });
-
-  new ApolloServer({
-    schema: shema
-  });
-}
+const port = Number(process.env.SERVEUR_PORT) || 3000;
 
 const startServer = async () => {
   try {
+    //inisalize la base de donnée
     await dataSource.initialize();
-    console.info(`Base de donnée connectée ✅`);
+    console.info(`🗄️ Base de donnée connectée ✅`);
 
-    app.listen(port, () => {
-      console.info(`Serveur lancer sur le port ${port} ✅`);
-      console.info(`\n\x1b[38;5;81m\x1b]8;;http://localhost:${port}/\x1b\\http://localhost:${port}/\x1b]8;;\x1b\\\x1b[39m`);
+    //confige le serveur graphql
+    const shema = await buildSchema({ resolvers: [AdResolver, TagResolver, CategoryResolver] });
+
+    const serveur = new ApolloServer({
+      schema: shema
     });
+
+    const { url } = await startStandaloneServer(serveur, {
+      listen: { port: port },
+    });
+
+    console.info(`🚀 Serveur lancer sur: \x1b[38;5;81m${url}\x1b[39m ✅`);
+    console.timeEnd("serveur démarrer");
   } catch (error) {
     console.error(`❌ Erreur de démarrage du serveur: ${error}`);
   }
-};
+}
 
 startServer();
