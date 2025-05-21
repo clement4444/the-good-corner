@@ -16,7 +16,7 @@ git:
 	if [ "$$reponse" = "y" ]; then \
 		read -p "quelle est le nom du commit ?" message; \
 		git commit -m "$$message"; \
-		@branch=$$(git rev-parse --abbrev-ref HEAD); \
+		branch=$$(git rev-parse --abbrev-ref HEAD); \
 		git push origin $$branch; \
 	else \
 		echo "Commande annulé"; \
