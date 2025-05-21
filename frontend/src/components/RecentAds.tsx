@@ -4,7 +4,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router";
 import { toast } from "react-toastify";
-import { useGetAllAdsQuery } from "../generated/graphql-types";
+import { useGetAllAdsQuery, useDeleteAdMutation } from "../generated/graphql-types";
 
 const RecentAds = () => {
   const [total, setTotal] = useState(0);
@@ -66,14 +66,27 @@ const RecentAds = () => {
   }, []);
 
   const delArticle = async (id: number) => {
-    try {
-      await axios.delete(`${import.meta.env.VITE_URL_API}/ads/${id}`);
-      toast.success("Annonce supprimée");
-      fetchData();
-    } catch (error) {
-      toast.error("Erreur lors de la suppression de l'annonce");
-      console.error(error);
-    }
+    const [deleteAd, { loading, error }] = useDeleteAdMutation();
+
+    await toast.promise(
+      deleteAd({ variables: { deleteAdId: id } }),
+      {
+        loading: "Suppression en cours...",
+        success: "Annonce supprimée",
+        error: "Erreur lors de la suppression de l'annonce",
+      }
+    );
+    // if (error) toast.error("Erreur lors de la suppression de l'annonce");
+    // if (data) toast.success("Annonce supprimée");
+
+    // try {
+    //   await axios.delete(`${import.meta.env.VITE_URL_API}/ads/${id}`);
+    //   toast.success("Annonce supprimée");
+    //   fetchData();
+    // } catch (error) {
+    //   toast.error("Erreur lors de la suppression de l'annonce");
+    //   console.error(error);
+    // }
   }
 
   const dupliquerArticle = async (ad: Ad) => {
@@ -107,8 +120,8 @@ const RecentAds = () => {
       <h2>Annonces récentes</h2>
       <h3>Total : {total} €</h3>
       <section className="recent-ads">
-        {ads.length > 0 ?
-          ads.map((ad) => (
+        {data && data.getAllAds.length > 0 ?
+          data.getAllAds.map((ad) => (
             <div key={ad.id}>
               <AdCard
                 ad={ad}

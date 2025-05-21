@@ -9,7 +9,7 @@ import { ApolloProvider } from '@apollo/client';
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 
 const client = new ApolloClient({
-  uri: "http://localhost:3310",
+  uri: `${import.meta.env.VITE_URL_API}`,
   cache: new InMemoryCache(),
 });
 

@@ -1,7 +1,4 @@
 import { Link } from "react-router";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import type { Categories } from "@/types/categorie";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useSearchParams } from "react-router";
 import { useGetAllCategoriesQuery } from "../generated/graphql-types";
@@ -11,11 +8,9 @@ interface SearchInput {
 }
 
 const Header = () => {
-  const [categories, setCategories] = useState<Categories[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const { data, loading, error } = useGetAllCategoriesQuery();
-  console.log("eurreur", error);
 
   //préparation du formulaire
   const {
@@ -38,18 +33,6 @@ const Header = () => {
     searchParams.set("categorie", String(id));
     setSearchParams(searchParams);
   };
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_URL_API}/categories`);
-        setCategories(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchCategories();
-  }, []);
 
   return (
     <header className="header">
@@ -115,7 +98,7 @@ const Header = () => {
                   >
                     {categorie.nom}
                   </button>
-                  {index < categories.length - 1 && " • "}
+                  {index < data.getAllCategories.length - 1 && " • "}
                 </div>
               ))
               : <p>Aucun catégorie trouvée</p>
