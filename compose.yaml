@@ -1,25 +1,4 @@
 services:
-  database:
-    container_name: postgres-db
-    image: postgres
-    environment:
-      - POSTGRES_PASSWORD="toto"
-      - POSTGRES_DB="toto"
-      - POSTGRES_USER="toto"
-      - POSTGRES_HOST="database"
-    volumes:
-      - ./database/:/var/lib/postgresql/data
-  backend:
-    container_name: backend-app
-    build: ./backend
-    env_file:
-      - backend/.env
-    ports:
-      - "3310:3310"
-    volumes:
-      - ./backend/src/:/app/src/
-    depends_on:
-      - database
   frontend:
     container_name: frontend-app
     build: ./frontend
@@ -31,3 +10,24 @@ services:
       - ./frontend/src/:/app/src/
     depends_on:
       - backend
+  backend:
+    container_name: backend-app
+    build: ./backend
+    env_file:
+      - backend/.env
+    ports:
+      - "3310:3310"
+    volumes:
+      - ./backend/src/:/app/src/
+    depends_on:
+      - database
+  database:
+    container_name: postgres-db
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_DATABASE}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_HOST=${DB_HOST}
+    volumes:
+      - ./database/:/var/lib/postgresql/data
