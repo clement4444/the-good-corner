@@ -9,7 +9,8 @@ services:
     volumes:
       - ./frontend/src/:/app/src/
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
   backend:
     container_name: backend-app
     build: ./backend
@@ -19,11 +20,15 @@ services:
       - "3310:3310"
     volumes:
       - ./backend/src/:/app/src/
+    healthcheck:
+      test: [ "CMD-SHELL", 'curl --fail --request POST --header ''Content-Type: application/json'' --url ''http://backend:3310'' --data ''{"query":"query { __typename }"}'' || exit 1' ]
     depends_on:
       - database
   database:
     container_name: postgres-db
     image: postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d ${DB_DATABASE} -U ${DB_USER}" ]
     environment:
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_DATABASE}

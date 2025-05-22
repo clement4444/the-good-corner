@@ -4,7 +4,6 @@ import { Category } from "../entities/category";
 import { Tag } from "../entities/tag";
 
 const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_DATABASE } = process.env;
-console.log(process.env)
 
 export const dataSource = new DataSource({
     type: "postgres",

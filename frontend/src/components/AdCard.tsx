@@ -1,8 +1,14 @@
 import { Link } from "react-router";
 import type { Ad } from "@type/adType";
+interface AdProps {
+  id: number;
+  title: string;
+  picture: string;
+  price: number;
+}
 
 interface AdCardProps {
-  ad: Ad;
+  ad: AdProps;
 }
 
 const AdCard = ({ ad }: AdCardProps) => {
