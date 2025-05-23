@@ -1,10 +1,12 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useForm, SubmitHandler } from "react-hook-form";
 import type { Categories } from "@/types/categorie";
 import type { Tags } from "@/types/tags";
 import { toast } from "react-toastify";
+import { useGetAllCategoriesQuery, useGetAllTagsQuery, useCreateAdMutation, CreateAdMutationVariables } from "../generated/graphql-types";
+import { GET_ALL_ADS } from "../graphql/operations";
 
 type Inputs = {
   title: string;
@@ -22,48 +24,60 @@ const NewAdForm = () => {
   const [categories, setCategories] = useState<Categories[]>([]);
   const [tags, setTags] = useState<Tags[]>([]);
 
+  const { data: dataCategorie } = useGetAllCategoriesQuery();
+  const { data: dataTags } = useGetAllTagsQuery();
+
+  type CreateAdType = CreateAdMutationVariables["data"];
+  const [createAd] = useCreateAdMutation({ refetchQueries: [GET_ALL_ADS] });
+
+
   //préparation du formulaire
   const {
     register,
     handleSubmit,
-  } = useForm<Inputs>()
+  } = useForm<CreateAdType>()
 
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+  const onSubmit: SubmitHandler<CreateAdType> = async (data) => {
     try {
-      await axios.post(`${import.meta.env.VITE_URL_API}/ads`, data);
+      console.log(data);
+      createAd({ variables: { data } });
       toast.success("Annonce crée avec succès");
-      navigate("/");
+      navigate("/", { replace: true });
     } catch (error) {
       toast.error("Erreur lors de l'envoie de l'annonce");
       console.error(error);
     }
   };
 
-  //charger les catégories
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_URL_API}/categories`);
-        setCategories(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchCategories();
-  }, []);
+  // //charger les catégories
+  // useEffect(() => {
+  //   const fetchCategories = async () => {
+  //     try {
+  //       const response = await axios.get(`${import.meta.env.VITE_URL_API}/categories`);
+  //       setCategories(response.data);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+  //   fetchCategories();
+  // }, []);
 
-  //charger les tags
-  useEffect(() => {
-    const fetchTags = async () => {
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_URL_API}/tags`);
-        setTags(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchTags();
-  }, []);
+  // //charger les tags
+  // useEffect(() => {
+  //   const fetchTags = async () => {
+  //     try {
+  //       const response = await axios.get(`${import.meta.env.VITE_URL_API}/tags`);
+  //       setTags(response.data);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+  //   fetchTags();
+  // }, []);
+
+  if (!dataCategorie || !dataTags) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <>
@@ -140,15 +154,15 @@ const NewAdForm = () => {
 
         <br />
 
-        {categories.length > 0 &&
+        {dataCategorie.getAllCategories.length > 0 &&
           <label>
             Choisissez une catégorie:
             <select
               className="text-field"
-              defaultValue={categories[0].id}
+              defaultValue={dataCategorie.getAllCategories[0].id}
               {...register("category_id", { required: true })}
             >
-              {categories.map((ca) => (
+              {dataCategorie.getAllCategories.map((ca) => (
                 <option key={ca.id} value={ca.id}>
                   {ca.nom}
                 </option>
@@ -157,8 +171,8 @@ const NewAdForm = () => {
           </label>
         }
 
-        {tags.length > 0 &&
-          tags.map((tag) => (
+        {dataTags.getAllTags.length > 0 &&
+          dataTags.getAllTags.map((tag) => (
             <label key={tag.id}>
               <input
                 type="checkbox"

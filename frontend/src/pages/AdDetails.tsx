@@ -1,12 +1,9 @@
 import { useParams } from "react-router";
-import { useState } from "react";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { useGetAdByIdQuery } from "../generated/graphql-types";
 
 const AdDetails = () => {
   const { id } = useParams();
-  const [isLoading, setIsLoading] = useState(true);
 
   const { data: ad, loading, error } = useGetAdByIdQuery({ variables: { getAdByIdId: Number(id) } });
 

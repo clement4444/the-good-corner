@@ -32,6 +32,15 @@ export const GET_ALL_CATEGORIES = gql`
   }
 `;
 
+export const GET_ALL_TAGS = gql`
+  query GetAllTags {
+    getAllTags {
+      id
+      nom
+    }
+  }
+`;
+
 export const GET_AD = gql`
   query getAdById($getAdByIdId: Float!) {
     getAdById(id: $getAdByIdId) {
@@ -63,15 +72,6 @@ export const DELETE_AD = gql`
 
 export const CREATE_AD = gql`
   mutation CreateAd($data: AdInput!) {
-  createAd(data: $data){
-    categories
-    description
-    location
-    owner
-    picture
-    price
-    tags
-    title
+    createAd(data: $data)
   }
-}
-`
+`;

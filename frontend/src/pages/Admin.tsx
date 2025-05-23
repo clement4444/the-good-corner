@@ -6,23 +6,24 @@ interface InputCategorie {
 }
 
 const Admin = () => {
-  const { register, handleSubmit } = useForm<InputCategorie>();
+  // const { register, handleSubmit } = useForm<InputCategorie>();
 
-  const onSubmit: SubmitHandler<InputCategorie> = async (data) => {
-    try {
-      const response = await axios.post("http://localhost:8000/api/admin", data);
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  // const onSubmit: SubmitHandler<InputCategorie> = async (data) => {
+  //   try {
+  //     const response = await axios.post("http://localhost:8000/api/admin", data);
+  //     console.log(response.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <label>
-        <input {...register("nom", { required: true })} />
-      </label>
-    </form >
+    // <form onSubmit={handleSubmit(onSubmit)}>
+    //   <label>
+    //     <input {...register("nom", { required: true })} />
+    //   </label>
+    // </form >
+    <p>Prochainement...</p>
   );
 };
 

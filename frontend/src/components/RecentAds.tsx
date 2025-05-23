@@ -1,21 +1,21 @@
 // import type { Ad } from "@type/adType";
 import AdCard from "./AdCard";
-// import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useSearchParams } from "react-router";
 import { toast } from "react-toastify";
-import { useGetAllAdsQuery, useNew, useDeleteAdMutation, GetAllAdsQuery } from "../generated/graphql-types";
+import { useGetAllAdsQuery, useCreateAdMutation, useDeleteAdMutation, GetAllAdsQuery } from "../generated/graphql-types";
 
 const RecentAds = () => {
   const [total, setTotal] = useState(0);
-  // const [ads, setAds] = useState<Ad[]>([]);
   const [searchParams] = useSearchParams();
 
   type Ad = GetAllAdsQuery["getAllAds"][0];
 
+  // a garder pour l'exemple :
+  // type CreateAdType = CreateAdMutationVariables["data"];
   const { data, loading, error, refetch } = useGetAllAdsQuery();
 
-  // const { data, loading, error, refetch } = useGetAllAdsQuery();
+  const [createAd] = useCreateAdMutation();
   const [deleteAd] = useDeleteAdMutation();
 
   // const fetchData = async () => {
@@ -82,19 +82,22 @@ const RecentAds = () => {
   }
 
   const dupliquerArticle = async (ad: Ad) => {
-    const data = {
-      title: ad.title,
+
+    const duplicate = {
+      categories: String(ad.categories.id),
       description: ad.description,
-      owner: ad.owner,
-      price: ad.price,
-      picture: ad.picture,
       location: ad.location,
-      category_id: ad.categories.id,
-    }
+      owner: ad.owner,
+      picture: ad.picture,
+      price: ad.price,
+      tags: ad.tags.map((tag) => String(tag.id)),
+      title: ad.title,
+    };
+
     try {
-      await axios.post(`${import.meta.env.VITE_URL_API}/ads`, data);
+      await createAd({ variables: { data: duplicate } });
+      await refetch();
       toast.success("Annonce dupliquée");
-      fetchData();
     } catch (error) {
       toast.error("Erreur lors de la duplication de l'annonce");
       console.error(error);
