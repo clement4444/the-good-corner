@@ -4,14 +4,19 @@ import AdCard from "./AdCard";
 import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router";
 import { toast } from "react-toastify";
-import { useGetAllAdsQuery, useDeleteAdMutation } from "../generated/graphql-types";
+import { useGetAllAdsQuery, useNew, useDeleteAdMutation, GetAllAdsQuery } from "../generated/graphql-types";
 
 const RecentAds = () => {
   const [total, setTotal] = useState(0);
   // const [ads, setAds] = useState<Ad[]>([]);
   const [searchParams] = useSearchParams();
 
-  const { data, loading, error } = useGetAllAdsQuery();
+  type Ad = GetAllAdsQuery["getAllAds"][0];
+
+  const { data, loading, error, refetch } = useGetAllAdsQuery();
+
+  // const { data, loading, error, refetch } = useGetAllAdsQuery();
+  const [deleteAd] = useDeleteAdMutation();
 
   // const fetchData = async () => {
   //   try {
@@ -66,60 +71,37 @@ const RecentAds = () => {
   // }, []);
 
   const delArticle = async (id: number) => {
-    const [deleteAd] = useDeleteAdMutation();
-    // deleteAd(id )
-
     toast.promise(
-      deleteAd({ variables: { deleteAdId: id } }),
+      deleteAd({ variables: { deleteAdId: id } }).then(() => { refetch() }),
       {
         pending: "Suppression de l'annonce...",
-        success: "Annonce supprimée ✅",
-        error: "Erreur lors de la suppression ❌",
+        success: "Annonce supprimée avec succès",
+        error: "Erreur lors de la suppression",
       }
     );
-
-
-    // toast.promise(
-    //   {
-    //   }
-    // );
-    // if (error) toast.error("Erreur lors de la suppression de l'annonce");
-    // if (data) toast.success("Annonce supprimée");
-
-    // try {
-    //   await axios.delete(`${import.meta.env.VITE_URL_API}/ads/${id}`);
-    //   toast.success("Annonce supprimée");
-    //   fetchData();
-    // } catch (error) {
-    //   toast.error("Erreur lors de la suppression de l'annonce");
-    //   console.error(error);
-    // }
   }
 
-  // const dupliquerArticle = async (ad: Ad) => {
-  //   const data = {
-  //     title: ad.title,
-  //     description: ad.description,
-  //     owner: ad.owner,
-  //     price: ad.price,
-  //     picture: ad.picture,
-  //     location: ad.location,
-  //     category_id: ad.categories.id,
-  //   }
-  //   try {
-  //     await axios.post(`${import.meta.env.VITE_URL_API}/ads`, data);
-  //     toast.success("Annonce dupliquée");
-  //     fetchData();
-  //   } catch (error) {
-  //     toast.error("Erreur lors de la duplication de l'annonce");
-  //     console.error(error);
-  //   }
-  // }
-
-  //returne
+  const dupliquerArticle = async (ad: Ad) => {
+    const data = {
+      title: ad.title,
+      description: ad.description,
+      owner: ad.owner,
+      price: ad.price,
+      picture: ad.picture,
+      location: ad.location,
+      category_id: ad.categories.id,
+    }
+    try {
+      await axios.post(`${import.meta.env.VITE_URL_API}/ads`, data);
+      toast.success("Annonce dupliquée");
+      fetchData();
+    } catch (error) {
+      toast.error("Erreur lors de la duplication de l'annonce");
+      console.error(error);
+    }
+  }
 
   if (loading) return <p>Chargement...</p>;
-  console.log(error)
 
   if (error) return <p>Erreur lors de la récupération des annonces, esseyer plus tard...</p>;
 
@@ -132,7 +114,7 @@ const RecentAds = () => {
           data.getAllAds.map((ad) => (
             <div key={ad.id}>
               <AdCard
-                ad={ad = { id: ad.id, picture: ad.picture, title: ad.title, price: ad.price }}
+                ad={ad}
               />
               <button
                 className="button"
@@ -148,7 +130,7 @@ const RecentAds = () => {
               </button>
               <button
                 className="button"
-              // onClick={() => dupliquerArticle(ad)}
+                onClick={() => dupliquerArticle(ad)}
               >
                 Duplique
               </button>

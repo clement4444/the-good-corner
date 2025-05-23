@@ -5,8 +5,20 @@ export const GET_ALL_ADS = gql`
   getAllAds {
     id
     title
+    description
+    owner
     price
     picture
+    location
+    createdAt
+    categories {
+      id
+      nom
+    }
+    tags {
+      id
+      nom
+    }
   }
 }
 `;
@@ -48,3 +60,18 @@ export const DELETE_AD = gql`
     deleteAd(id: $deleteAdId)
   }
 `;
+
+export const CREATE_AD = gql`
+  mutation CreateAd($data: AdInput!) {
+  createAd(data: $data){
+    categories
+    description
+    location
+    owner
+    picture
+    price
+    tags
+    title
+  }
+}
+`

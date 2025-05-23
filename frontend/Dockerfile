@@ -1,13 +1,14 @@
 FROM node:lts-alpine
 WORKDIR /app
 
-COPY src src
-COPY public public
 COPY *.json .
-COPY codegenConfig.ts .
-COPY vite.config.ts .
-COPY index.html .
-
 RUN npm install
+
+COPY index.html .
+COPY vite.config.ts .
+COPY codegenConfig.ts .
+COPY public public
+COPY src src
+
 
 CMD npm run dev

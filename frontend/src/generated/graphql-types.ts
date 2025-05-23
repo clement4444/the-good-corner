@@ -116,7 +116,7 @@ export type TagInput = {
 export type GetAllAdsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllAdsQuery = { __typename?: 'Query', getAllAds: Array<{ __typename?: 'Ad', id: number, title: string, price: number, picture: string }> };
+export type GetAllAdsQuery = { __typename?: 'Query', getAllAds: Array<{ __typename?: 'Ad', id: number, title: string, description: string, owner: string, price: number, picture: string, location: string, createdAt: any, categories: { __typename?: 'Category', id: number, nom: string }, tags: Array<{ __typename?: 'Tag', id: number, nom: string }> }> };
 
 export type GetAllCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -143,8 +143,20 @@ export const GetAllAdsDocument = gql`
   getAllAds {
     id
     title
+    description
+    owner
     price
     picture
+    location
+    createdAt
+    categories {
+      id
+      nom
+    }
+    tags {
+      id
+      nom
+    }
   }
 }
     `;

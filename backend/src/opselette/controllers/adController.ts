@@ -1,4 +1,4 @@
-import { Ad } from "../entities/ad";
+import { Ad } from "../../entities/ad";
 import { RequestHandler } from "express";
 import { ILike, FindOperator } from "typeorm";
 

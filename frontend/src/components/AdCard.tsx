@@ -1,17 +1,10 @@
 import { Link } from "react-router";
-import type { Ad } from "@type/adType";
-interface AdProps {
-  id: number;
-  title: string;
-  picture: string;
-  price: number;
-}
+import { GetAllAdsQuery } from "../generated/graphql-types";
 
-interface AdCardProps {
-  ad: AdProps;
-}
+type AdType = GetAllAdsQuery["getAllAds"][number];
 
-const AdCard = ({ ad }: AdCardProps) => {
+const AdCard = ({ ad }: { ad: AdType }) => {
+
   return (
     <div className="ad-card-container">
       <Link className="ad-card-link" to={`/ad/${ad.id}`}>

@@ -1,4 +1,4 @@
-import { Tag } from "../entities/tag";
+import { Tag } from "../../entities/tag";
 import { RequestHandler } from "express";
 
 const getAll: RequestHandler = async (_req, res, next) => {

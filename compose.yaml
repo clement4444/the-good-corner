@@ -23,7 +23,8 @@ services:
     healthcheck:
       test: [ "CMD-SHELL", 'curl --fail --request POST --header ''Content-Type: application/json'' --url ''http://backend:3310'' --data ''{"query":"query { __typename }"}'' || exit 1' ]
     depends_on:
-      - database
+      database:
+        condition: service_healthy
   database:
     container_name: postgres-db
     image: postgres

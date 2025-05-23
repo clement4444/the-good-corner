@@ -1,4 +1,4 @@
-import { Category } from "../entities/category";
+import { Category } from "../../entities/category";
 import e, { RequestHandler } from "express";
 
 const getAll: RequestHandler = async (_req, res, next) => {
